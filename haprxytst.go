@@ -40,6 +40,7 @@ func Regchecker(command2 string, ip string) int {
 func main() {
 	ip := "10.160.66.220"
 	var sbddevice string
+	var installed int
 
 	//-----running crm status to check if nodes online
 	checker := strings.Split(ssher.SSH("root", ip, "crm status", "print"), "\n")
@@ -103,8 +104,23 @@ func main() {
 		fmt.Println("\ne. All nodes well-registered on running SBD and ready!\n")
 	}
 
-	//------checking if haproxy installed....
-	command4 := "rpm -qi haproxy"
-	ssher.SSH("root", ip, command4, "print")
-	// TO DO... see why
+	//------checking if haproxy installed, if not - it will install it
+	command4 := "zypper se -s haproxy"
+	checker = strings.Split(ssher.SSH("root", ip, command4, "string"), "\n")
+	for i := 0; i < len(checker); i++ {
+		if strings.Contains(checker[i], "i+") {
+			installed++
+			fmt.Println("\nf. haproxy is installed!\n")
+		}
+	}
+
+	//------installing haproxy if its not on the machine
+	if installed < 1 {
+		checker = strings.Split(ssher.SSH("root", ip, "zypper -n install haproxy", "string"), "\n")
+	}
+	//fmt.Println(checker[len(checker)-2])
+	if strings.Contains(checker[len(checker)-2], "1/1") && strings.Contains(checker[len(checker)-2], "Installing") && strings.Contains(checker[len(checker)-2], "done") {
+		fmt.Println("\nf. Succes! haproxy successfully installed!")
+	}
+
 }
