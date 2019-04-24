@@ -1,0 +1,23 @@
+group ha_group
+{
+key /etc/csync2/key_hagroup;
+host {{.Node1}};
+        host {{.Node2}};
+        host {{.Node3}};
+include /etc/booth;
+include /etc/corosync/corosync.conf;
+include /etc/corosync/authkey;
+include /etc/csync2/csync2.cfg;
+include /etc/csync2/key_hagroup;
+include /etc/ctdb/nodes;
+include /etc/drbd.conf;
+include /etc/drbd.d;
+include /etc/ha.d/ldirectord.cf;
+include /etc/lvm/lvm.conf;
+include /etc/multipath.conf;
+include /etc/samba/smb.conf;
+include /etc/sysconfig/pacemaker;
+include /etc/sysconfig/sbd;
+include /etc/pacemaker/authkey;
+include /etc/haproxy/haproxy.cfg;
+}
